@@ -17,15 +17,13 @@ public class MovieRepository {
 	public MovieDetails findMovieDetailsById(int movieId) {
 		RestTemplate template = new RestTemplate();
 
-		String url = "https://api.themoviedb.org/3/movie/"+movieId+"?";
+		String url = "https://api.themoviedb.org/3/movie/" + movieId + "?";
 		url += "api_key=679e9857895a2235f19bffa7a33e7494&";
 		url += "language=ko-KR&";
-		
-	
+
 		return null;
 	}
-	
-	
+
 	public MovieList findPopularList(int page) throws JsonMappingException, JsonProcessingException {
 		RestTemplate template = new RestTemplate();
 
@@ -34,19 +32,18 @@ public class MovieRepository {
 		url += "language=ko-KR&";
 		url += "page=" + page;
 
-		ResponseEntity<MovieList> response = 
-				template.exchange(url, HttpMethod.GET, null, MovieList.class);
-		
+		ResponseEntity<MovieList> response = template.exchange(url, HttpMethod.GET, null, MovieList.class);
+
 		return response.getBody();
-		
+
 		/*
-		ResponseEntity<String> response = 
-			template.exchange(url, HttpMethod.GET, null, String.class);
-			
-		String resposneBody = response.getBody();
-		
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(resposneBody, MovieList.class);
-		*/
+		 * ResponseEntity<String> response = template.exchange(url, HttpMethod.GET,
+		 * null, String.class);
+		 * 
+		 * String resposneBody = response.getBody();
+		 * 
+		 * ObjectMapper mapper = new ObjectMapper(); return
+		 * mapper.readValue(resposneBody, MovieList.class);
+		 */
 	}
 }
