@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.app.repository.FavoriteRepository">
+	<insert id="save">
+		INSERT INTO FAVORITES VALUES(FAVORITES_SEQ.NEXTVAL,
+		#{userId}, #{movieId}, #{movieTitle}, #{movieGenres})
+	</insert>
+	<select id="findAllByUserId" resultType="favorite">
+		SELECT * FROM FAVORITES WHERE
+		USER_ID=#{userId}
+	</select>
+	<delete id="deleteById">
+		DELETE FROM FAVORITES WHERE ID=#{id}
+	</delete>
+
+</mapper>

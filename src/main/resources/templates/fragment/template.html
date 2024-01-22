@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>더 무비 - 당신의 영화창고</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+ 
+::-webkit-scrollbar {
+  display: none;
+}
+
+</style>
+</head>
+<body>
+	<div class="bg-dark text-white" style="min-height: 100vh">
+		<div
+			class="sticky-top p-2 fs-3 mb-2 z-3 bg-dark d-flex justify-content-between align-items-end"
+			th:fragment="header">
+			<a th:href="@{/}"
+				class="link-underline link-underline-opacity-0 link-light"> <i
+				class="bi bi-film"></i> <span>THE MOVIE</span>
+			</a>
+			<div th:if="${session.logonUser != null}" class="fs-6 pe-2">
+				<i class="bi bi-emoji-grin"></i> <span
+					th:text="${session.logonUser.id}"></span>
+			</div>
+			<div th:unless="${session.logonUser != null}" class="fs-6 pe-2">
+				<a th:href="@{/signin}"
+					class="link-underline link-underline-opacity-0 link-light"> <i
+					class="bi bi-unlock"></i> <span>SignIn</span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
