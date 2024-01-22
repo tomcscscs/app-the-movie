@@ -7,7 +7,7 @@
 		<div th:replace="~{fragment/template :: header}"></div>
 		<div class="px-5 position-relative">
 			<div class="px-5 d-flex align-items-center"
-				style="height: 450px; background-size: cover; filter: blur(4px);"
+				style="height: 450px; background-size: cover; "
 				th:styleappend="|background-image : url(@{https://image.tmdb.org/t/p/original{path}(path=${movie.backdropPath})})|">
 				<div style="z-index: 2">
 					<img
@@ -16,9 +16,10 @@
 				</div>
 				<div>설명충</div>
 			</div>
-			<div >
+			<div th:if="${session.logonUser != null}" class="py-2" >
 				<span> 
-					<i class="bi bi-heart-fill" id="fav-bt"></i>
+					<i class="bi " 
+						th:classappend="${favorited ? 'bi-heart-fill' : 'bi-heart'}" id="fav-bt" th:data-target="${movie.id}"></i>
 				</span>
 			</div>
 		</div>
@@ -34,12 +35,47 @@
 			});
 		 */
 		$("#fav-bt").on("click", function(evt) {
-			if($(this).hasClass("bi-heart-fill")) {
-				$(document.querySelector("#fav-bt")).removeClass("bi-heart-fill");
-				$("#fav-bt").addClass("bi-heart");
-			}else {
-				$("#fav-bt").removeClass("bi-heart");
-				$("#fav-bt").addClass("bi-heart-fill");
+			// document.querySelector("#fav-bt").dataSet.target
+			const target = $("#fav-bt").data("target");
+			if($(this).hasClass("bi-heart")) {	// 비어있는 하트상태일때 (미등록 즐겨찾기 일때)
+				$.ajax({
+					url : "/movie/favorite/"+target,
+					method : "post",
+					dataType: "json"
+				}).done(function(response){
+					 // console.log(typeof response, response);
+					 // const obj = JSON.parse(text);
+					 console.log(response);
+					if(response.result) {
+						$("#fav-bt").removeClass("bi-heart");
+						$("#fav-bt").addClass("bi-heart-fill");
+					}else {
+						window.alert(response.cause);
+					}
+				});
+				
+			}else { // 그렇지 않을때
+				
+				$.ajax({
+					url : "/movie/favorite/"+target,
+					method : "delete",
+					dataType: "json"
+				}).done(function(response){
+					 // console.log(typeof response, response);
+					 // const obj = JSON.parse(text);
+					 console.log(response);
+					if(response.result) {
+						$("#fav-bt").toggleClass("bi-heart");
+						$("#fav-bt").toggleClass("bi-heart-fill");
+					}else {
+						window.alert(response.cause);
+					}
+				});
+				
+				
+				
+				
+				
 			}
 		});
 	</script>

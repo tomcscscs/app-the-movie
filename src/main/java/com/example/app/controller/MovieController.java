@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +34,24 @@ public class MovieController {
 	private final FavoriteRepository favoriteRepository;
 
 	@GetMapping("/{movieId}")
-	public String showSpecificMovieDetail(@PathVariable int movieId, Model model) {
+	public String showSpecificMovieDetail(@PathVariable int movieId, Model model,
+			@SessionAttribute(required = false) User logonUser) {
 		MovieDetails details = movieRepository.findMovieDetailsById(movieId);
 		model.addAttribute("movie", details);
+
+		if (logonUser != null) {
+			// 로그인하고 있는 유저의 페이보릿 리스트를 가지고 와
+			List<Favorite> favorites = favoriteRepository.findAllByUserId(logonUser.getId());
+			boolean exist = false;
+			for (Favorite f : favorites) {
+				if (f.getMovieId().equals(movieId)) {
+					exist = true;
+					break;
+				}
+			}
+			// 이 안에 이 영화가 있어 ==> true , 아니면 false
+			model.addAttribute("favorited", exist);
+		}
 
 		return "movie/details";
 	}
@@ -90,5 +106,28 @@ public class MovieController {
 		return response;
 	}
 	// 즐겨찾기 삭제
+
+	@DeleteMapping("/favorite/{movieId}")
+	@ResponseBody
+	public Map<String, Object> proceedRemoveFavorite(@PathVariable Integer movieId, @SessionAttribute User logonUser) {
+
+		List<Favorite> favorites = favoriteRepository.findAllByUserId(logonUser.getId());
+		Favorite found = null;
+		for (Favorite f : favorites) {
+			if (f.getMovieId().equals(movieId)) {
+				found = f;
+				break;
+			}
+		}
+		Map<String, Object> response = new LinkedHashMap<>();
+		if (found == null) {
+			response.put("result", false);
+			response.put("cause", "등록된 적이 없는 영화입니다.");
+			return response;
+		}
+		favoriteRepository.deleteById(found.getId());
+		response.put("result", true);
+		return response;
+	}
 
 }
