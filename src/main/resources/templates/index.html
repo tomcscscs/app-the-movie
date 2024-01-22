@@ -1,72 +1,105 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>더 무비 - 당신의 영화창고</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-	
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<head th:replace="~{fragment/template::head}">
 </head>
 <body>
-	<div class="sticky-top bg-dark text-white p-4 fs-3 mb-2" style="font-family: 'Anton';">THE
-		MOVIE</div>
-	<div class="container">
-		<div>
-			<div
-				class="p-1 fs-4 bg-dark text-white d-flex 
-										justify-content-between">
-				<span>인기순</span> <a th:href="@{/popular}">+</a>
-			</div>
-			<div class="row row-cols-2 row-cols-md-6  g-1">
-				<div class="card " th:each="one : ${movieList.results}"
-					th:if="${oneStat.count <= 6}">
-					<img
-						th:src="@{https://image.tmdb.org/t/p/w500{path}(path=${one.posterPath})}"
-						class="card-img-top" />
-					<div class="card-body">
-						<p class="card-title">
-							<span th:text="${one.title}"></span> <small
-								th:text="${one.originalTitle}"></small>
-						</p>
-						<p class="card-text fs-6" th:text="${one.overview}"></p>
+	<div class="bg-dark text-white" style="min-height: 100vh" id="main">
+		<div th:replace="~{fragment/template :: header}"></div>
+
+		<div class="px-5 z-2">
+			<!-- recommend -->
+			<div id="recommend" class="carousel slide carousel-fade mb-1">
+				<div class="carousel-inner">
+					<div th:each="item : ${recommend}" class="carousel-item"  th:classappend="${itemStat.first ? 'active' :''}" >
+						<img
+							th:src="@{https://image.tmdb.org/t/p/original{path}(path=${item.backdropPath})}"
+							class="d-block w-100 object-fit-cover rounded-2" height="500">
 					</div>
-					<a class="stretched-link"
-						th:href="@{/movie/{movieId}(movieId=${one.id})}"></a>
+					<div th:remove="all">
+						<div class="carousel-item active">
+							<img src="..." class="d-block w-100" alt="...">
+						</div>
+						<div class="carousel-item">
+							<img src="..." class="d-block w-100" alt="...">
+						</div>
+						<div class="carousel-item">
+							<img src="..." class="d-block w-100" alt="...">
+						</div>
+					</div>
+				</div>
+				<button class="carousel-control-prev" type="button"
+					data-bs-target="#recommend" data-bs-slide="prev">
+					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Previous</span>
+				</button>
+				<button class="carousel-control-next" type="button"
+					data-bs-target="#recommend" data-bs-slide="next">
+					<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<span class="visually-hidden">Next</span>
+				</button>
+			</div>
+
+			<!-- popuplated -->
+			<div class="populated">
+				<div
+					class="p-1 fs-4 bg-dark text-white d-flex 
+										justify-content-between">
+					<span><i class="bi bi-fire"></i> 최신 인기 작품들</span> <a
+						th:href="@{/popular}"
+						class="link-underline link-underline-opacity-0 link-light"><i
+						class="bi bi-three-dots"></i></a>
+				</div>
+				<div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-1">
+					<div th:each="one : ${popular.results}" class="p-1">
+						<div class="card " th:if="${oneStat.count <= 6}">
+							<img
+								th:src="@{https://image.tmdb.org/t/p/w500{path}(path=${one.backdropPath})}"
+								class="card-img-top rounded-1" />
+							<div class="card-body">
+								<div class="card-text text-truncate"
+									th:text="|#${oneStat.count}. ${one.title}|"></div>
+								<div class="card-text text-secondary text-truncate"
+									th:text="${one.originalTitle}"></div>
+							</div>
+							<a class="stretched-link "
+								th:href="@{/movie/{movieId}(movieId=${one.id})}"></a>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div>
-			<div
-				class="p-1 fs-4 bg-dark text-white d-flex 
+
+
+			<div class="top-rated">
+				<div
+					class="p-1 fs-4 bg-dark text-white d-flex 
 										justify-content-between">
-				<span>평점순</span> <a th:href="@{/topRated}">+</a>
-			</div>
-			<div class="row row-cols-md-6 g-1">
-				<div class="card " th:each="one : ${indexTopRated.results}"
-					th:if="${oneStat.count <= 6}">
-					<img
-						th:src="@{https://image.tmdb.org/t/p/w500{path}(path=${one.posterPath})}"
-						class="card-img-top" />
-					<div class="card-body">
-						<p class="card-title">
-							<span th:text="${one.title}"></span> <small
-								th:text="${one.originalTitle}"></small>
-						</p>
-						<p class="card-text fs-6" th:text="${one.overview}"></p>
+					<span><i class="bi bi-trophy-fill"></i> 꾸준히 사랑받는 작품들</span> <a
+						th:href="@{/top-rated}"
+						class="link-underline link-underline-opacity-0 link-light"><i
+						class="bi bi-three-dots"></i></a>
+				</div>
+				<div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-1">
+					<div th:each="one : ${topRated.results}" class="p-1">
+						<div class="card " th:if="${oneStat.count <= 6}">
+							<img
+								th:src="@{https://image.tmdb.org/t/p/w500{path}(path=${one.backdropPath})}"
+								class="card-img-top rounded-1" />
+							<div class="card-body">
+								<div class="card-text text-truncate"
+									th:text="|#${oneStat.count}. ${one.title}|"></div>
+								<div class="card-text text-secondary text-truncate"
+									th:text="${one.originalTitle}"></div>
+							</div>
+							<a class="stretched-link "
+								th:href="@{/movie/{movieId}(movieId=${one.id})}"></a>
+						</div>
 					</div>
-					<a class="stretched-link"
-						th:href="@{/movie/{movieId}(movieId=${one.id})}"></a>
 				</div>
 			</div>
-		</div>
 
+		</div>
 	</div>
-
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

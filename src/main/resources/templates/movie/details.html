@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/template :: head}">
+</head>
+<body>
+	<div class="bg-dark text-white" style="min-height: 100vh">
+		<div th:replace="~{fragment/template :: header}"></div>
+		<div class="px-5 position-relative">
+			<div class="px-5 d-flex align-items-center"
+				style="height: 450px; background-size: cover; filter: blur(4px);"
+				th:styleappend="|background-image : url(@{https://image.tmdb.org/t/p/original{path}(path=${movie.backdropPath})})|">
+				<div style="z-index: 2">
+					<img
+						th:src="@{https://image.tmdb.org/t/p/w500{path}(path=${movie.posterPath})}"
+						style="height: 400px" class="rounded-4" />
+				</div>
+				<div>설명충</div>
+			</div>
+			<div >
+				<span> 
+					<i class="bi bi-heart-fill" id="fav-bt"></i>
+				</span>
+			</div>
+		</div>
+	</div>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script>
+		/*
+			document.querySelector("#fav-bt").addEventListener("click", function() {
+				
+			});
+		 */
+		$("#fav-bt").on("click", function(evt) {
+			if($(this).hasClass("bi-heart-fill")) {
+				$(document.querySelector("#fav-bt")).removeClass("bi-heart-fill");
+				$("#fav-bt").addClass("bi-heart");
+			}else {
+				$("#fav-bt").removeClass("bi-heart");
+				$("#fav-bt").addClass("bi-heart-fill");
+			}
+		});
+	</script>
+</body>
+</html>

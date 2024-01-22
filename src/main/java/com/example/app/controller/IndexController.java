@@ -1,15 +1,15 @@
 package com.example.app.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.app.model.Movie;
+import com.example.app.model.MovieList;
 import com.example.app.repository.MovieRepository;
 import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,36 +21,13 @@ public class IndexController {
 
 	@GetMapping({ "/", "/index" })
 	public String showIndex(Model model) throws JacksonException {
+		MovieList popular = movieRepository.findPopularList(1);
+		MovieList topRated = movieRepository.findTopRatedrList(1);
 
-		model.addAttribute("movieList", movieRepository.findPopularList(1));
-		model.addAttribute("indexTopRated", movieRepository.findTopRatedList(1));
+		List<Movie> recommend = List.of(popular.getResults().get(0), topRated.getResults().get(0));
+		model.addAttribute("popular", popular);
+		model.addAttribute("topRated", topRated);
+		model.addAttribute("recommend", recommend);
 		return "index";
 	}
-	
-	@GetMapping("/popular")
-	public String showThePopularMore(Model model) throws JsonMappingException, JsonProcessingException {
-		model.addAttribute("movieListDuplicator", movieRepository.findPopularList(1));
-		return "popularMore";
-		
-	}
-	
-	@GetMapping("/topRated")
-	public String showTopRatedMore(Model model) throws JsonMappingException, JsonProcessingException {
-		model.addAttribute("movieListTopRateAll", movieRepository.findTopRatedList(1));
-		return "topRatedMore";
-		
-	}
-	
-	@GetMapping("/movie/{movieId}")
-	public String showPopularDetail(Model model,@PathVariable int movieId) throws JsonMappingException, JsonProcessingException {
-		model.addAttribute("showPopularDetail", movieRepository.findPopularMovieDetailsById(movieId));
-		return  "popularDetail";
-		
-	
-	}
-	
-
-	 
-	
-	
 }

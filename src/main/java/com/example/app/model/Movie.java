@@ -19,8 +19,6 @@ public class Movie {
 
 	private Integer id;
 	
-	@JsonProperty("original_language")
-	private String originalLanguage;
 	
 	@JsonProperty("original_title")
 	private String originalTitle;

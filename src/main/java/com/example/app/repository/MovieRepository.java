@@ -5,31 +5,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.app.model.MovieDetailField;
+import com.example.app.model.MovieDetails;
 import com.example.app.model.MovieList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class MovieRepository {
 
-	public MovieDetailField findPopularMovieDetailsById(int movieId) throws JsonMappingException, JsonProcessingException {
+	public MovieDetails findMovieDetailsById(int movieId) {
 		RestTemplate template = new RestTemplate();
 
 		String url = "https://api.themoviedb.org/3/movie/" + movieId + "?";
 		url += "api_key=679e9857895a2235f19bffa7a33e7494&";
-		url += "language=ko-KR&";
+		url += "language=ko-KR";
 
-		ResponseEntity<MovieDetailField> response = template.exchange(url, HttpMethod.GET, null, MovieDetailField.class);
+		ResponseEntity<MovieDetails> response = template.exchange(url, HttpMethod.GET, null, MovieDetails.class);
 
 		return response.getBody();
-		
-		
 	}
 
-	
-	
 	public MovieList findPopularList(int page) throws JsonMappingException, JsonProcessingException {
 		RestTemplate template = new RestTemplate();
 
@@ -52,8 +47,8 @@ public class MovieRepository {
 		 * mapper.readValue(resposneBody, MovieList.class);
 		 */
 	}
-	
-	public MovieList findTopRatedList(int page) throws JsonMappingException, JsonProcessingException {
+
+	public MovieList findTopRatedrList(int page) throws JsonMappingException, JsonProcessingException {
 		RestTemplate template = new RestTemplate();
 
 		String url = "https://api.themoviedb.org/3/movie/top_rated?";
@@ -64,9 +59,6 @@ public class MovieRepository {
 		ResponseEntity<MovieList> response = template.exchange(url, HttpMethod.GET, null, MovieList.class);
 
 		return response.getBody();
+
 	}
-	
-	
-	
-	
 }
