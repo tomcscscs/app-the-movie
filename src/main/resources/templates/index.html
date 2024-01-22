@@ -21,9 +21,9 @@
 										justify-content-between">
 				<span>인기순</span> <a th:href="@{/popular}">+</a>
 			</div>
-			<div class="row row-cols-2 row-cols-md-4  g-1">
+			<div class="row row-cols-2 row-cols-md-6  g-1">
 				<div class="card " th:each="one : ${movieList.results}"
-					th:if="${oneStat.count <= 4}">
+					th:if="${oneStat.count <= 6}">
 					<img
 						th:src="@{https://image.tmdb.org/t/p/w500{path}(path=${one.posterPath})}"
 						class="card-img-top" />
@@ -46,9 +46,9 @@
 										justify-content-between">
 				<span>평점순</span> <a th:href="@{/topRated}">+</a>
 			</div>
-			<div class="row row-cols-md-4 g-1">
+			<div class="row row-cols-md-6 g-1">
 				<div class="card " th:each="one : ${indexTopRated.results}"
-					th:if="${oneStat.count <= 4}">
+					th:if="${oneStat.count <= 6}">
 					<img
 						th:src="@{https://image.tmdb.org/t/p/w500{path}(path=${one.posterPath})}"
 						class="card-img-top" />
